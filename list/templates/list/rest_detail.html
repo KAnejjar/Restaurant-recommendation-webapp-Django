@@ -1,0 +1,595 @@
+{% extends 'list/base2.html' %}
+{% load static %}
+{% block title %}
+<title>Details</title>
+{% endblock%}
+
+{% block content %}
+<style>
+.ligne {
+    display: inline-block;
+    }
+
+.fa {
+  font-size: 20px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.fa:hover {
+  color: #ffd800;
+}
+body {
+     height:100%;
+     margin:0;
+     padding:0;
+}
+#overlay {
+     visibility: hidden;
+     position: fixed;
+     top: 100vh;
+     margin: 0 auto;
+     left: 20%;
+     width:100%;
+     height:55vh;
+     color:black;
+     background-color: Silver;
+     text-align:center;
+     z-index: 1000;
+     -webkit-filter: blur;
+
+
+}
+#overlay div {
+     width:300px;
+     margin-left:160px;
+     padding:0px;
+}
+
+* {box-sizing: border-box;}
+body {font-family: Verdana, sans-serif;}
+.mySlides {display: none;}
+img {vertical-align: middle;}
+
+/* Slideshow container */
+.slideshow-container {
+  max-width: 1000px;
+  position: relative;
+  margin: auto;
+}
+
+/* Caption text */
+.text {
+  color: #f2f2f2;
+  font-size: 15px;
+  padding: 8px 12px;
+  position: absolute;
+  bottom: 8px;
+  width: 100%;
+  text-align: center;
+}
+
+/* Number text (1/3 etc) */
+.numbertext {
+  color: #f2f2f2;
+  font-size: 12px;
+  padding: 8px 12px;
+  position: absolute;
+  top: 0;
+}
+
+/* The dots/bullets/indicators */
+.dot {
+  height: 15px;
+  width: 15px;
+  margin: 0 2px;
+  background-color: #bbb;
+  border-radius: 50%;
+  display: inline-block;
+  transition: background-color 0.6s ease;
+}
+
+.active {
+  background-color: #717171;
+}
+
+/* Fading animation */
+.fade {
+  -webkit-animation-name: fade;
+  -webkit-animation-duration: 1.5s;
+  animation-name: fade;
+  animation-duration: 1.5s;
+}
+
+@-webkit-keyframes fade {
+  from {opacity: .4}
+  to {opacity: 1}
+}
+
+@keyframes fade {
+  from {opacity: .4}
+  to {opacity: 1}
+}
+
+/* On smaller screens, decrease text size */
+@media only screen and (max-width: 300px) {
+  .text {font-size: 11px}
+}
+.rating1{
+    width:25px;
+    heigth:25px;
+}
+</style>
+
+    <section class="ftco-section">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-8 ftco-animate">
+            <h2 class="mb-3">{{ Restau.Nom }}</h2>
+          <h6>
+              {% for value in Restau.get_etoiles %}
+                      <span><img src="/media/static{{ MEDIA_URL }}{{value}}" class="rating1"/></span>
+              {% endfor %}
+              | {{ Restau.Adresse}}
+              | {{ Restau.Origine_cuisine }}
+          </h6><br>
+          <p>{{ Restau.Details|linebreaksbr }}</p>
+            <div class="slideshow-container">
+            {% for i in imgs %}
+            <div class="mySlides fade">
+              <a href="{{ MEDIA_URL }}{{i}}" class="insta-img image-popup">
+                  <img src="{{ MEDIA_URL }}{{i}}" style="width:90%;height:450px" >
+              </a>
+            </div>
+              {% endfor %}
+            </div>
+            <br>
+            <div style="text-align:center">
+              {% for i in imgs %}
+              <span class="dot"></span>
+             {% endfor %}
+            </div>
+            <div class="pt-5 mt-5">
+              <h3 class="mb-5">
+              <a class="btn btn-primary btn-outline-primary p-3" style="width:310px;">Avis des Visiteurs</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              <a id="trigger-btn" href="#myCom" data-toggle="modal" class="btn btn-primary py-3 px-5" style="width:310px;">Ajoutez votre Avis </a>
+              </h3>
+
+               {% for com in coms %}
+                {% if com.Restau == Restau %}
+               <ul class="comment-list">
+                <li class="comment">
+                  <div class="vcard bio">
+                    {% if com.User.image %}
+                    <img src="{{ MEDIA_URL }}{{com.User.image}}" alt="Image placeholder">
+                    {% elif com.User.sexe == 'M' %}
+                    <img src="{% static '/media/users/male-User.png' %}" alt="Image placeholder">
+                    {% else %}
+                    <img src="{% static '/media/users/Female-User.png' %}" alt="Image placeholder">{% endif %}
+                  </div>
+                  <div class="comment-body">
+                    <h3>{{ com.User }}</h3>
+                    <div class="meta">{{ com.Date_pub }}</div>
+                    <p>{{ com.Contenu }}</p>
+                      <form class="form-inline" action="{% url 'rest_detail' Restau.pk %}" method="POST" style="display: inline;">
+                          {% csrf_token %}
+                          {% load custom_tags %}
+                          {% likedComment user.id com.id as liked%}
+                         {% if liked %}
+                          <button type="submit" id="Unlike" name="com_id" value="{{ com.id }}" style="border:0;background:none;color:orange;"><i class="fa fa-heart" style="font-size:22px;"></i></button>
+                        {% else %}
+                          <button type="submit" id="like" name="com_id" value="{{ com.id }}" style="border:0;background:none;"><i class="fa fa-heart-o" style="font-size:22px;"></i></button>
+                          {% endif %}{% if com.total_likes <= 1 %} {{ com.total_likes }} Like {% else %}{{ com.total_likes }} likes {% endif %}
+                      </form><span class="replybutton btn4 like" > <i type="button"  id="replyb"  class="reply" style="cursor:pointer">répondre</i></span>
+
+
+                <ul class="children ligne" style="display:none">
+                 <li class="comment">
+                 <form action="{% url 'rest_detail' Restau.pk %}" method="post" enctype="multipart/form-data" class="form-inline">
+                                        {% csrf_token %}
+                                         <div class="form-group mx-sm-3 mb-2">
+                                          {{ formrep.Contenu }}
+                                      </div>
+                                         <input type='text' name='num' style="display:none;" value={{ com.pk }} />
+                                          <button type="submit" class="reply" name="rep">Poster la réponse</button>
+                                        </form>
+                 </li></ul>
+
+{% for rep in reps%}{% if rep.Com == com %}
+                  <ul class="children">
+                    <li class="comment">
+
+
+                      <div class="vcard bio">
+                    {% if rep.User.image %}
+                    <img src="{{ MEDIA_URL }}{{rep.User.image}}" alt="Image placeholder">
+                    {% elif rep.User.sexe == 'M' %}
+                    <img src="{% static '/media/users/male-User.png' %}" alt="Image placeholder">
+                    {% else %}
+                    <img src="{% static '/media/users/Female-User.png' %}" alt="Image placeholder">{% endif %}
+                  </div>
+                      <div class="comment-body">
+                        <h3>{{ rep.User }}</h3>
+                        <div class="meta">{{ rep.Date_pub }}</div>
+                        <p>{{ rep.Contenu }}</p>
+                         <form class="form-inline" action="{% url 'rest_detail' Restau.pk %}" method="POST" style="display: inline;">
+                          {% csrf_token %}
+                          {% load custom_tags %}
+                          {% likedRep user.id rep.id as likedrep%}
+                         {% if likedrep %}
+                          <button type="submit" id="Unlikerep" name="rep_id" value="{{ rep.id }}" style="border:0;background:none;color:orange;"><i class="fa fa-heart" style="font-size:22px;"></i></button>
+                        {% else %}
+                          <button type="submit" id="likerep" name="rep_id" value="{{ rep.id }}" style="border:0;background:none;"><i class="fa fa-heart-o" style="font-size:22px;"></i></button>
+                          {% endif %}{% if rep.total_likes <= 1 %} {{ rep.total_likes }} Like {% else %}{{ rep.total_likes }} likes {% endif %}
+                      </form>
+                      </div>
+                    </li>
+                  </ul>
+                 {% endif %}{% endfor %}
+
+                  </div>
+
+                </li>
+
+              </ul>{% endif %}{% endfor %}
+        <!-- END comment-list -->
+
+            </div>
+
+          </div> <!-- .col-md-8 -->
+      <div class="col-md-4 sidebar">
+            <div class="sidebar-box">
+              <form action="#" class="search-form">
+                <div class="form-group">
+                    <span><a href="{% url 'plat_list2' Restau.pk %}" class="btn btn-primary py-3 px-5" style="width:310px;">  Menu</a></span>
+                </div>
+                  <div class="form-group" data-toggle="modal" data-target="#exampleModalCenter">
+                    <span><span class="btn btn-primary py-3 px-5" style="width:310px;">  Carte</span></span>
+                  </div>
+              </form>
+            </div>
+              <div class="listing__sidebar__contact">
+                            <div class="listing__sidebar__contact__map"><span id="address" style="display:none">{{ Restau.Nom}},{{ Restau.Adresse}}</span>
+<iframe id="map" width="600" height="45"></iframe>
+                            </div>
+
+                        </div>
+<div class="modal fade bd-example-modal-lg" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered" style="width:700px;height: 466px;">
+    <div class="modal-content">
+      <div id="mapid" style="width:700px;height: 466px;"></div>
+    </div>
+  </div>
+</div>
+            <div class="sidebar-box ftco-animate">
+                <h4>Horaire d'Ouverture</h4>
+                            {% load custom_tags %}
+                            {% HeuresTravail  as res  %}
+                            <ul class="list-unstyled">
+                                {% for obj in res %}
+                                  <li>{{ obj }}</li>
+                                {% endfor %}
+                            </ul>
+            </div>
+          </div>
+
+        </div>
+      </div> </section>
+    <!-- .section -->
+ <script type="text/javascript">
+   var latitude = "{{latitude}}";
+   var longitude = "{{longitude}}";
+   var zooom = "{{zoom}}";
+   var mark = "{{marker}}";
+   var menu = "<a href='{% url 'plat_list2' Restau.pk %}'>Voir le Menu</a>";
+</script>
+
+<script>
+var myicon = L.icon({
+    iconUrl: mark,
+    iconSize: [50, 50]
+    });
+
+  var mymap = L.map('mapid', {center: [latitude, longitude],zoom: zooom});
+  //var mymap = L.map('mapid').setView([latitude, longitude], zoom);
+  L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw', {
+    maxZoom: 18,minZoom:3,
+    attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, ' +
+      '<a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
+      'Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+    id: 'mapbox/streets-v11',
+    tileSize: 512,
+    zoomOffset: -1
+  }).addTo(mymap);
+
+
+var marker = L.marker([latitude, longitude],{icon: myicon}).addTo(mymap);
+marker.bindPopup("<b>{{Restau.Nom}}</b><br>{{ Restau.get_rating_value }} <span class='icon-star' style='color:#FFC300;''></span><br>{{Restau.Origine_cuisine}}<br>"+menu);
+
+</script>
+<script>
+ var q=encodeURIComponent($('#address').text());
+       $('#map')
+        .attr('src',
+             'https://www.google.com/maps/embed/v1/place?key=AIzaSyAvyqAWYeo_vSlagHjmL5qriby3Evy1KUI&q='+q);
+
+</script>
+      <style>
+
+.modal-login .btn, .modal-login .btn:active {
+	color: #fff;
+	border-radius: 4px;
+	background: #FF8C00 !important;
+	text-decoration: none;
+	transition: all 0.4s;
+	line-height: normal;
+	border: none;
+}
+.modal-login .btn:hover, .modal-login .btn:focus {
+	background: orange !important;
+	outline: none;
+}
+</style>
+<div id="myCom" class="modal fade" >
+	<div class="modal-dialog modal-login modal-lg" style="color: #636363; width: 100%;height: 100%; padding-left:0px;" >
+		<div class="modal-content" >
+			<div class="modal-header">
+				<h4 class="modal-title">Commentez et Notez le Restaurant</h4>
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+			</div>
+			<div class="modal-body" >
+				<form action="{% url 'rest_detail' Restau.pk %}"  method="post" enctype="multipart/form-data">
+                 {% csrf_token %}
+                    <span style="margin-left:10%">{{ form.Contenu }}</span><br>
+              <div class="rating" style="margin-right:35%">
+                  <input type="radio" id="star5" name="rating" value="5" /><label for="star5" title="Excellent">5 stars</label>
+                  <input type="radio" id="star4" name="rating" value="4" /><label for="star4" title="Bien">4 stars</label>
+                  <input type="radio" id="star3" name="rating" value="3" /><label for="star3" title="Ok">3 stars</label>
+                  <input type="radio" id="star2" name="rating" value="2" /><label for="star2" title="pauvre">2 stars</label>
+                  <input type="radio" id="star1" name="rating" value="1" /><label for="star1" title="très mauvais">1 star</label>
+             </div><br><br><br>
+             <div class="form-group" style="width: 570px;margin-left:10% ">
+            <label class="control-label">Choisir une image</label>
+            <div class="preview-zone hidden">
+              <div class="box box-solid">
+                <div class="box-header with-border">
+
+                  <div class="box-tools pull-right">
+
+                      <i class="fa fa-times remove-preview" style="display:none;" id="aff"></i>
+                  </div>
+
+                </div>
+                <div class="box-body"></div>
+              </div>
+            </div>
+            <div class="dropzone-wrapper">
+              <div class="dropzone-desc">
+                  <i class="fa fa-download"></i>
+                <p>Choisissez un fichier image ou faites-le glisser ici.</p>
+              </div>
+              {{ form.image }}
+            </div>
+          </div>
+          <br>
+             <div class="form-group">
+                <input type="button" value="Annuler" class="btn btn-primary py-3 px-5 " style="float:left;" data-dismiss="modal" aria-hidden="true"/>
+                <input type="submit" name="comm" value="Poster" class="btn btn-primary py-3 px-5" style="float:right;"/>
+             </div>
+
+          </form>
+			</div>
+		</div>
+	</div>
+</div>
+<style>
+.box {
+  position: relative;
+  background: #ffffff;
+
+}
+
+.box-header {
+  color: #444;
+  display: block;
+  padding: 3px;
+  position: relative;
+  border-bottom: 1px solid #f4f4f4;
+  margin-bottom: 10px;
+}
+
+.box-tools {
+  position: absolute;
+  right: 10px;
+
+}
+
+.dropzone-wrapper {
+  border: 2px dashed #91b0b3;
+  color: #92b0b3;
+  position: relative;
+  height: 100px;
+}
+
+.dropzone-desc {
+  position: absolute;
+  margin: 0 auto;
+  left: 0;
+  right: 0;
+  text-align: center;
+
+  top: 20px;
+  font-size: 14px;
+}
+
+.dropzone,
+.dropzone:focus {
+  position: absolute;
+  outline: none !important;
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+  opacity: 0;
+}
+
+.dropzone-wrapper:hover,
+.dropzone-wrapper.dragover {
+  background: #ecf0f5;
+}
+
+.preview-zone {
+  text-align: center;
+}
+
+.preview-zone .box {
+  box-shadow: none;
+  border-radius: 0;
+  margin-bottom: 0;
+}
+
+</style>
+<script>
+// Code By Webdevtrick ( https://webdevtrick.com )
+divInfo = document.getElementById('aff');
+function readFile(input) {
+  if (input.files && input.files[0]) {
+    var reader = new FileReader();
+
+    reader.onload = function(e) {
+    divInfo.style.display = 'block';
+      var htmlPreview =
+        '<img width="80" src="' + e.target.result + '" />' +
+        '<p>' + input.files[0].name + '</p>';
+      var wrapperZone = $(input).parent();
+      var previewZone = $(input).parent().parent().find('.preview-zone');
+      var boxZone = $(input).parent().parent().find('.preview-zone').find('.box').find('.box-body');
+
+      wrapperZone.removeClass('dragover');
+      previewZone.removeClass('hidden');
+      boxZone.empty();
+      boxZone.append(htmlPreview);
+    };
+
+    reader.readAsDataURL(input.files[0]);
+  }
+}
+
+function reset(e) {
+  e.wrap('<form>').closest('form').get(0).reset();
+  divInfo.style.display = 'none';
+  e.unwrap();
+}
+
+$(".dropzone").change(function() {
+  readFile(this);
+});
+
+$('.dropzone-wrapper').on('dragover', function(e) {
+  e.preventDefault();
+  e.stopPropagation();
+  $(this).addClass('dragover');
+});
+
+$('.dropzone-wrapper').on('dragleave', function(e) {
+  e.preventDefault();
+  e.stopPropagation();
+  $(this).removeClass('dragover');
+});
+
+$('.remove-preview').on('click', function() {
+  var boxZone = $(this).parents('.preview-zone').find('.box-body');
+  var previewZone = $(this).parents('.preview-zone');
+  var dropzone = $(this).parents('.form-group').find('.dropzone');
+  boxZone.empty();
+  previewZone.addClass('hidden');
+  reset(dropzone);
+});
+</script>
+<script>
+var slideIndex = 0;
+showSlides();
+
+function showSlides() {
+  var i;
+  var slides = document.getElementsByClassName("mySlides");
+  var dots = document.getElementsByClassName("dot");
+  for (i = 0; i < slides.length; i++) {
+    slides[i].style.display = "none";
+  }
+  slideIndex++;
+  if (slideIndex > slides.length) {slideIndex = 1}
+  for (i = 0; i < dots.length; i++) {
+    dots[i].className = dots[i].className.replace(" active", "");
+  }
+  slides[slideIndex-1].style.display = "block";
+  dots[slideIndex-1].className += " active";
+  setTimeout(showSlides, 1500);
+}
+function overlay() {
+	el = document.getElementById("overlay");
+	el.style.visibility = (el.style.visibility == "visible") ? "hidden" : "visible";
+}
+</script>
+<style type="text/css">
+ .rating {
+    }
+    .rating:not(:checked) > input {
+        position:absolute;
+        top:-9999px;
+        clip:rect(0,0,0,0);
+    }
+
+    .rating:not(:checked) > label {
+        float:right;
+        width:1em;
+        overflow:hidden;
+        white-space:nowrap;
+        cursor:pointer;
+        font-size:300%;
+        color:#aaa;
+    }
+
+    .rating:not(:checked) > label:before {
+        content: '★ ';
+    }
+
+    .rating > input:checked ~ label {
+        color: orange;
+
+    }
+
+    .rating:not(:checked) > label:hover,
+    .rating:not(:checked) > label:hover ~ label {
+        color: orange;
+
+    }
+
+    .rating > input:checked + label:hover,
+    .rating > input:checked + label:hover ~ label,
+    .rating > input:checked ~ label:hover,
+    .rating > input:checked ~ label:hover ~ label,
+    .rating > label:hover ~ input:checked ~ label {
+        color: orange;
+
+    }
+
+    .rating > label:active {
+        position:relative;
+        top:2px;
+        left:2px;
+    }
+</style>
+<script type="text/javascript">
+
+/* la fonction de thumbs up et down*/
+function myFunction(x) {
+  x.classList.toggle("fa-thumbs-down");
+  }
+  /* la fonction qui affiche la formule de reponse*/
+$(document).ready(function() {
+  $('.replybutton').click(function() {
+    $(this).next('.ligne').toggle();
+  });
+});
+</script>
+{% endblock %}
