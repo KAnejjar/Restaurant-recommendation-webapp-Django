@@ -1,0 +1,170 @@
+{% extends 'list/base.html' %}
+{% load static %}
+{% block title %}<title>Acount creation</title>{% endblock %}
+{% block content %}
+<style>
+    .btn-file {
+        position: relative;
+        overflow: hidden;
+    }
+    .btn-file input[type=file] {
+        position: absolute;
+        top: 0;
+        right: 0;
+        min-width: 100%;
+        min-height: 100%;
+        font-size: 100px;
+        text-align: right;
+        filter: alpha(opacity=0);
+        opacity: 0;
+        outline: none;
+        background: white;
+        cursor: inherit;
+        display: block;
+    }
+    .upload {
+    width: 157px;
+    height: 57px;
+    background: url(https://lh6.googleusercontent.com/-dqTIJRTqEAQ/UJaofTQm3hI/AAAAAAAABHo/w7ruR1SOIsA/s157/upload.png);
+    overflow: hidden;
+}
+
+.upload input {
+    display: block !important;
+    width: 157px !important;
+    height: 57px !important;
+    opacity: 0 !important;
+    overflow: hidden !important;
+}
+</style>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+
+ <section class="ftco-section">
+      <div class="container">
+        <div class="row no-gutters justify-content-center mb-5 pb-5">
+          <div class="col-md-7 text-center heading-section ftco-animate">
+            <h2>Créez Votre Compte</h2>
+          </div>
+        </div>
+        <div class="row d-flex">
+          <div class="col-md-4 ftco-animate img" style="background-image: url({% static 'images/bg_1.jpg'%});"></div>
+          <div class="col-md-8 ftco-animate makereservation p-5 bg-light">
+            <form action="{% url 'create_acount'%}" method="post" enctype="multipart/form-data">
+    {% csrf_token%}
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label >Nom <span style="color:red">*</span ></label><br>
+                      {{ form.Nom.errors }}
+                    {{form.Nom}}
+                      {% if form.Nom.help_text %}
+                <p class="help">{{ form.Nom.help_text|safe }}</p>
+            {% endif %}
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="form-group">{{ form.mail.errors }}
+                    <label >Email <span style="color:red">*</span ></label><br>
+
+                    {{form.mail}}
+                      {% if form.mail.help_text %}
+                <p class="help">{{ form.mail.help_text|safe }}</p>
+            {% endif %}
+                  </div>
+                </div>
+
+
+<div class="col-md-6">
+                  <div class="form-group">
+                    <label >Image </label><br>
+                     <span class="btn btn-outline  btn-file" >{{ form.image}}
+
+      <label class="custom-file-label">Choisir une image</label> </span>
+                  </div>
+                </div>
+
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label >Sexe</label><br>
+                    <div class="select-wrap one-third">
+                      {{form.sexe}}
+                    <div class="icon"><span class="ion-ios-arrow-down"></span></div>
+                    </div>
+                  </div>
+                </div>
+                  <div class="col-md-6">
+                  <div class="form-group">
+                    <label >Mot de Passe <span style="color:red">*</span ></label><br>
+                     {{form.MotPasse}}
+                  </div>
+                </div>
+                  <div class="col-md-6">
+                  <div class="form-group">
+                    <label >Confirmer le Mot de Passe <span style="color:red">*</span ></label><br>
+                    <input type="password" name="confirm_password" id="confirm_password"  onkeyup='check();'  class="form-control" />
+                      <span id='message'></span>
+                  </div>
+                </div>
+
+                <div class="col-md-12 mt-3">
+                  <div class="form-group">
+                    <input type="submit" value="Create" class="btn btn-primary py-3 px-5" id="submit" disabled>
+                  </div>
+                </div>
+              </div>
+            </form>
+
+              <script>btn-file input[type=file]
+// Add the following code if you want the name of the file appear on select
+$(".btn-file custom-file-label").on("change", function() {
+  var fileName = $(this).val().split("\\").pop();
+  $(this).siblings(".btn-file custom-file-label").addClass("selected").html(fileName);
+});
+</script>
+              <script>
+var check = function() {
+  if (document.getElementById('password').value ==
+    document.getElementById('confirm_password').value) {
+    document.getElementById('message').style.color = 'green';
+    document.getElementById('message').innerHTML = 'correspondent';
+    document.getElementById('submit').disabled = false;
+  } else {
+    document.getElementById('message').style.color = 'red';
+    document.getElementById('message').innerHTML = 'ne correspondent pas';
+    document.getElementById('submit').disabled = true;
+  }
+}
+
+</script>
+              <style>
+
+.btn-file {
+  position: relative;
+  overflow: hidden;
+ width: 20em;
+ height:3.3em;
+}
+.btn-file input[type=file] {
+  position: absolute;
+  top: 0;
+  right: 0;
+  min-width: 1000%;
+  min-height: 100%;
+  font-size: 100px;
+  text-align: right;
+  filter: alpha(opacity=0);
+  opacity: 0;
+  outline: none;
+  background: white;
+  cursor: inherit;
+  display: block;
+
+}
+
+</style>
+          </div>
+        </div>
+      </div>
+    </section>
+
+{% endblock %}

@@ -1,0 +1,214 @@
+<html lang="en">
+  <head>
+    {% load static %}
+<title>Listing</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto|Varela+Round">
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+
+    <link href="https://fonts.googleapis.com/css?family=Muli:300,400,600,700" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Indie+Flower" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+
+    <link rel="stylesheet" href="{% static 'css/open-iconic-bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/animate.css' %}">
+    <link rel="stylesheet" href="{% static 'css/owl.carousel.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/owl.theme.default.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/magnific-popup.css' %}">
+    <link rel="stylesheet" href="{% static 'css/aos.css' %}">
+    <link rel="stylesheet" href="{% static 'css/ionicons.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/bootstrap-datepicker.css' %}">
+    <link rel="stylesheet" href="{% static 'css/jquery.timepicker.css' %}">
+    <link rel="stylesheet" href="{% static 'css/flaticon.css' %}">
+    <link rel="stylesheet" href="{% static 'css/icomoon.css' %}">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+  </head>
+  <body>
+
+    <nav class="navbar navbar-expand-lg navbar-dark ftco_navbar bg-dark ftco-navbar-light" id="ftco-navbar">
+      <div class="container">
+        <a class="navbar-brand">EAT Smart</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#ftco-nav" aria-controls="ftco-nav" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="oi oi-menu"></span> Menu
+        </button>
+
+        <div class="collapse navbar-collapse" id="ftco-nav">
+          <ul class="navbar-nav ml-auto">
+            <li class="nav-item"><a href="{% url 'index2' idu %}" class="nav-link">Accueil</a></li>
+            <li class="nav-item active"><a href="{% url 'listing2'  %}" class="nav-link">Listing</a></li>
+            <li class="nav-item"><a href="{% url 'about2'  %}" class="nav-link">À propos</a></li>
+            <li class="nav-item"><a href="{% url 'logout' %}" class="nav-link"><i class="fa fa-sign-out" aria-hidden="true"></i>Se déconnecter</a></li>
+            </ul>
+          </ul>
+        </div>
+      </div>
+    </nav>
+    <!-- END nav -->
+
+    <section class="home-slider owl-carousel">
+      <div class="slider-item" style="background-image: url({% static 'images/bg_1.jpg'%});">
+        <div class="overlay"></div>
+        <div class="container">
+          <div class="row slider-text align-items-center justify-content-center text-center">
+            <div class="col-md-10 col-sm-12 ftco-animate">
+              <h1 class="mb-3">Restaurants Selon Votre Convenance</h1>
+              <p><a href="{% url 'meilleurs2'  %}" class="btn btn-primary btn-outline-white px-5 py-3">Les Meilleurs Restaurants</a></p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="slider-item" style="background-image: url({% static 'images/bg_2.jpg' %});">
+        <div class="overlay"></div>
+        <div class="container">
+          <div class="row slider-text align-items-center justify-content-center text-center">
+            <div class="col-md-10 col-sm-12 ftco-animate">
+              <h1 class="mb-3">Decouvrez Les Restaurants à proximité de Vous</h1>
+              <p><a href="{% url 'meilleurs2'  %}" class="btn btn-primary btn-outline-white px-5 py-3">Les Meilleurs Restaurants</a></p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="slider-item" style="background-image: url({% static 'images/bg_3.jpg' %});">
+        <div class="overlay"></div>
+        <div class="container">
+          <div class="row slider-text align-items-center justify-content-center text-center">
+            <div class="col-md-10 col-sm-12 ftco-animate">
+              <h1 class="mb-3">Guide Alimentaire pour Voyageurs</h1>
+              <p><a href="{% url 'meilleurs2'  %}" class="btn btn-primary btn-outline-white px-5 py-3">Les Meilleurs Restaurants</a></p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- END slider -->
+<style>
+input[type=checkbox] {
+    transform: scale(1.5);
+}
+mark {
+    background: gold;
+    color: black;
+    }
+.remove-all-styles {
+    all: revert;
+  }
+</style>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+ <div class="ftco-section-reservation">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-12 reservation pt-5 px-5">
+            <div class="block-17">
+              <form action="#" method="post" class="d-block d-lg-flex">
+                {% csrf_token %}
+                <div class="fields d-block d-lg-flex">
+                <div class="select-wrap one-third">
+                    <div class="icon"><span class="ion-ios-arrow-down"></span></div>
+                    <select name="cuisine" id="" class="form-control">
+                      <option value="" hidden>Cuisisne</option>
+                      <option value="Cuisine Française">Française</option>
+                      <option value="Cuisine Marocaine">Marocaine</option>
+                      <option value="Cuisine Japonaise">Japonaise</option>
+                      <option value="Cuisine Italienne">Italienne</option>
+                      <option value="Cuisine Mexicaine">Mexicaine</option>
+                      <option value="Cuisine Grecque">Grecque</option>
+                    </select>
+                  </div>
+                  <div class="textfield-name one-thir">
+                     <input type="search" name="mot_cle" class="form-control" placeholder="Rechercher sur le site ..." size=55 data-title="Nom Restaurant, Nom plat, Adresse... "/>
+                  </div>
+                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                  <div class="textfield-name one-thir">
+                  <span><h5><input type="checkbox" id="tri" style="transform:scale(2.1);" name="tri_par_etoile">&nbsp;&nbsp;
+                  Meilleurs <b> &#9733;</b></h5></span>
+                  </div>
+                  </div>
+                  <input type="submit" class="search-submit btn btn-primary" value="Valider&rarr;">
+
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+{%if resultat|length > 0 %}
+  <section class="ftco-section bg-light">
+      <div class="container">
+        <div class="row">
+            {% for Restau in resultat %}
+          <div class="col-md-6 col-lg-3 ftco-animate">
+            <div class="blog-entry">
+                {% for img in Restau.get_premiere_image|slice:":1" %}
+              <a href="{% url 'rest_detail' Restau.pk %}" class="block-20" style="background-image: url({{ MEDIA_URL }}{{ img }});">
+              </a>
+                    {% endfor %}
+
+              <div class="text p-4" id="para">
+                <div class="meta">
+                  <div><a href="{% url 'rest_detail' Restau.pk %}">{{ Restau.Origine_cuisine }}</a></div><br>
+                  <div><a href="{% url 'rest_detail' Restau.pk %}">{{ Restau.Adresse }}</a></div>
+                </div>
+                <h3 class="heading"><a href="{% url 'rest_detail' Restau.pk %}">{{ Restau.Nom }}</a></h3>
+                <p class="clearfix">
+                  <a href="{% url 'rest_detail' Restau.pk %}" class="float-left read">Voir Plus</a>
+                  <a href="{% url 'rest_detail' Restau.pk %}" class="float-right meta-chat"><span class="icon-star" style="color:#FFC300;"></span> {{ Restau.get_rating_value }}</a>
+                </p>
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+        </div>
+      </div>
+</div>
+</section>
+{% elif resultat|length < 1 and envoi %}
+    <section class="ftco-section bg-light">
+      <div class="container">
+       <div class="row justify-content-center mb-5 pb-5">
+          <div class="col-md-7 text-center heading-section ftco-animate">
+            <span class="subheading">Erreur 404</span>
+            <h2>Désolé, Aucun résultat ne correspond à votre recherche.</h2>
+          </div>
+        </div>
+      </div>
+    </section>
+{% endif %}
+<footer class="ftco-bg-dark">
+        <p style="color: aliceblue"><b>@MSIDBD</b></p><br>
+    </footer>
+  <!-- loader -->
+  <div id="ftco-loader" class="show fullscreen"><svg class="circular" width="48px" height="48px"><circle class="path-bg" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke="#eeeeee"/><circle class="path" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke-miterlimit="10" stroke="#F96D00"/></svg></div>
+
+
+  <script src="{% static 'js/jquery.min.js' %}"></script>
+  <script src="{% static 'js/jquery-migrate-3.0.1.min.js' %}"></script>
+  <script src="{% static 'js/popper.min.js' %}"></script>
+  <script src="{% static 'js/bootstrap.min.js' %}"></script>
+  <script src="{% static 'js/jquery.easing.1.3.js' %}"></script>
+  <script src="{% static 'js/jquery.waypoints.min.js' %}"></script>
+  <script src="{% static 'js/jquery.stellar.min.js' %}"></script>
+  <script src="{% static 'js/owl.carousel.min.js' %}"></script>
+  <script src="{% static 'js/jquery.magnific-popup.min.js' %}"></script>
+  <script src="{% static 'js/aos.js' %}"></script>
+  <script src="{% static 'js/jquery.animateNumber.min.js' %}"></script>
+  <script src="{% static 'js/bootstrap-datepicker.js' %}"></script>
+  <script src="{% static 'js/jquery.timepicker.min.js' %}"></script>
+  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBVWaKrjvy3MaE7SQ74_uJiULgl1JY0H2s&sensor=false"></script>
+  <script src="{% static 'js/google-map.js' %}"></script>
+  <script src="{% static 'js/main.js' %}"></script>
+
+  </body>
+

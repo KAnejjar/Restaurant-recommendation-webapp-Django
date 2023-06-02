@@ -1,7 +1,7 @@
 <html lang="en">
   <head>
     {% load static %}
-<title>About</title>
+<title>Listing</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
@@ -44,8 +44,8 @@
         <div class="collapse navbar-collapse" id="ftco-nav">
           <ul class="navbar-nav ml-auto">
             <li class="nav-item"><a href="{% url 'index'  %}" class="nav-link">Accueil</a></li>
-            <li class="nav-item"><a href="{% url 'listing'  %}" class="nav-link">Listing</a></li>
-            <li class="nav-item active"><a href="{% url 'about'  %}" class="nav-link">À propos</a></li>
+            <li class="nav-item active"><a href="{% url 'listing'  %}" class="nav-link">Listing</a></li>
+            <li class="nav-item"><a href="{% url 'about'  %}" class="nav-link">À propos</a></li>
             <li class="nav-item"><a href="#myModal" class="nav-link" data-toggle="modal"><i class="fa fa-fw fa-user"></i>Se connecter</a></li>
           </ul>
           </ul>
@@ -61,7 +61,7 @@
           <div class="row slider-text align-items-center justify-content-center text-center">
             <div class="col-md-10 col-sm-12 ftco-animate">
               <h1 class="mb-3">Restaurants Selon Votre Convenance</h1>
-             <p><a href="{% url 'meilleurs'  %}" class="btn btn-primary btn-outline-white px-5 py-3">Les Meilleurs Restaurants</a></p>
+              <p><a href="{% url 'meilleurs'  %}" class="btn btn-primary btn-outline-white px-5 py-3">Les Meilleurs Restaurants</a></p>
             </div>
           </div>
         </div>
@@ -92,116 +92,100 @@
       </div>
     </section>
     <!-- END slider -->
+<style> 
+input[type=checkbox] {
+    transform: scale(1.5);
+}
+mark {
+    background: gold;
+    color: black;
+    }
+.remove-all-styles {
+    all: revert;
+  }
+</style>    
 
-
-
-<section class="ftco-section-2">
-      <div class="container d-flex">
-        <div class="section-2-blocks-wrapper row">
-          <div class="img col-sm-12 col-lg-6" style="background-image: url({% static 'images/imgs.jpg'%});">
-          </div>
-          <div class="text col-lg-6 ftco-animate">
-            <div class="text-inner align-self-start">
-              <span class="subheading">Qui sommes nous</span>
-              <h3 class="heading">Votre guide dans le monde des fins gourmets.</h3>
-              <p>Proposer une sélection rigoureuse de restaurants les plus populaires
-                          avec des avis de clients, les photos et beaucoup d'autres informations..</p>
-
-              <p>Si vous cherchez un bon restaurant à proximité, vous êtes sur le bon endroit, On est là pour vous aider à trouver votre destination : Trouvez le restaurant que vous desirez parmi des centaines classés par type de cuisine (restaurant marocain, restaurant français, restaurant italien, restaurant espagnol etc.), par ville ou encore par des plats. Un extrait de la carte à jour et les menus complètent l'information..</p>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+ <div class="ftco-section-reservation">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-12 reservation pt-5 px-5">
+            <div class="block-17">
+              <form action="#" method="post" class="d-block d-lg-flex">
+                {% csrf_token %}
+                <div class="fields d-block d-lg-flex">
+                <div class="select-wrap one-third">
+                    <div class="icon"><span class="ion-ios-arrow-down"></span></div>
+                    <select name="cuisine" id="" class="form-control">
+                      <option value="" hidden>Cuisisne</option>
+                      <option value="Cuisine Française">Française</option>
+                      <option value="Cuisine Marocaine">Marocaine</option>
+                      <option value="Cuisine Japonaise">Japonaise</option>
+                      <option value="Cuisine Italienne">Italienne</option>
+                      <option value="Cuisine Mexicaine">Mexicaine</option>
+                      <option value="Cuisine Grecque">Grecque</option>
+                    </select>
+                  </div>
+                  <div class="textfield-name one-thir">
+                     <input type="search" name="mot_cle" class="form-control" placeholder="Rechercher sur le site ..." size=55 data-title="Nom Restaurant, Nom plat, Adresse... "/>
+                  </div>
+                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                  <div class="textfield-name one-thir">
+                  <span><h5><input type="checkbox" id="tri" style="transform:scale(2.1);" name="tri_par_etoile">&nbsp;&nbsp;
+                  Meilleurs <b> &#9733;</b></h5></span>
+                  </div>
+                  </div>
+                  <input type="submit" class="search-submit btn btn-primary" value="Valider&rarr;"> 
+                
+              </form>
             </div>
           </div>
         </div>
       </div>
-    </section>
- <br> <br>
+    </div>
 
-   <!--::industries start::-->
-    <section class="best_services section_padding">
-        <div class="container">
-            <div class="row justify-content-center">
-                <div class="col-xl-6">
-                    <div class="section_tittle text-center">
-                        <h2>Nous vous offrons les meilleurs services</h2>
-                        <p>Nous aidons les voyageurs et les gourmets à trouver les meilleurs endroits pour manger local.</p>
-                    </div>
+{%if resultat|length > 0 %}
+  <section class="ftco-section bg-light">
+      <div class="container">
+        <div class="row">
+            {% for Restau in resultat %}
+          <div class="col-md-6 col-lg-3 ftco-animate">
+            <div class="blog-entry">
+                {% for img in Restau.get_premiere_image|slice:":1" %}
+              <a href="{% url 'rest_detail2' Restau.pk %}" class="block-20" style="background-image: url({{ MEDIA_URL }}{{ img }});">
+              </a>
+                    {% endfor %}
+
+              <div class="text p-4" id="para">
+                <div class="meta">
+                  <div><a href="{% url 'rest_detail2' Restau.pk %}">{{ Restau.Origine_cuisine }}</a></div><br>
+                  <div><a href="{% url 'rest_detail2' Restau.pk %}">{{ Restau.Adresse }}</a></div>
                 </div>
+                <h3 class="heading"><a href="{% url 'rest_detail2' Restau.pk %}">{{ Restau.Nom }}</a></h3>
+                <p class="clearfix">
+                  <a href="{% url 'rest_detail2' Restau.pk %}" class="float-left read">Voir Plus</a>
+                  <a href="{% url 'rest_detail2' Restau.pk %}" class="float-right meta-chat"><span class="icon-star" style="color:#FFC300;"></span> {{ Restau.get_rating_value }}</a>
+                </p>
+              </div>
             </div>
-            <div class="row">
-                <div class="col-lg-3 col-sm-6">
-                    <div class="single_ihotel_list">
-                        <img src="{% static 'images/opinion.jpg'%}" alt="" style="width:263px;height:190px;">
-                        <h4 class="_31wvD">Avis d'utilisateurs</h4>
-                        <p>Recommandations,avis et les notes d'une puissante communauté.</p>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-sm-6">
-                    <div class="single_ihotel_list">
-                        <img src="{% static 'images/traveling.jpg'%}" alt="" style="width:263px;height:190px;">
-                        <h4 class="_31wvD"> le meilleur guide</h4>
-                        <p>Meilleur guide pour trouvez l'endroit à proximité grâce aux cartes interactives intégrées.</p>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-sm-6">
-                    <div class="single_ihotel_list">
-                        <img src="{% static 'images/search.jpg'%}" alt="" style="width:263px;height:190px;">
-                        <h4 class="_31wvD"> Recherche puissante</a></h4>
-                        <p>Choisissez le type de cuisine, le genre de restaurant, filtrez selon vos convenances.</p>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-sm-6">
-                    <div class="single_ihotel_list">
-                        <img src="{% static 'images/choice.jpg'%}" alt="" style="width:263px;height:190px;">
-                        <h4 class="_31wvD"> Meilleurs choix</a></h4>
-                        <p>Une sélection inégalée de restaurants pour tout ce que vous voulez.</p>
-                    </div>
-                </div>
-            </div>
+          </div>
+        {% endfor %}
         </div>
-    </section>
- <br>
-
-  <section class="instagram">
-      <div class="container-fluid">
-        <div class="row no-gutters">
-          <div class="col-sm-12 col-md ftco-animate">
-            <a href="{% static 'images/insta-1.jpg'%}" class="insta-img image-popup" style="background-image: url({% static 'images/insta-1.jpg'%});">
-              <div class="icon d-flex justify-content-center">
-                <span class="icon-instagram align-self-center"></span>
-              </div>
-            </a>
-          </div>
-          <div class="col-sm-12 col-md ftco-animate">
-            <a href="{% static 'images/insta-2.jpg'%}" class="insta-img image-popup" style="background-image: url({% static 'images/insta-2.jpg'%});">
-              <div class="icon d-flex justify-content-center">
-                <span class="icon-instagram align-self-center"></span>
-              </div>
-            </a>
-          </div>
-          <div class="col-sm-12 col-md ftco-animate">
-            <a href="{% static 'images/insta-3.jpg'%}" class="insta-img image-popup" style="background-image: url({% static 'images/insta-3.jpg'%});">
-              <div class="icon d-flex justify-content-center">
-                <span class="icon-instagram align-self-center"></span>
-              </div>
-            </a>
-          </div>
-          <div class="col-sm-12 col-md ftco-animate">
-            <a href="{% static 'images/insta-4.jpg'%}" class="insta-img image-popup" style="background-image: url({% static 'images/insta-4.jpg'%});">
-              <div class="icon d-flex justify-content-center">
-                <span class="icon-instagram align-self-center"></span>
-              </div>
-            </a>
-          </div>
-          <div class="col-sm-12 col-md ftco-animate">
-            <a href="{% static 'images/insta-5.jpg'%}" class="insta-img image-popup" style="background-image: url({% static 'images/insta-5.jpg'%});">
-              <div class="icon d-flex justify-content-center">
-                <span class="icon-instagram align-self-center"></span>
-              </div>
-            </a>
+      </div>
+</div>
+</section>
+{% elif resultat|length < 1 and envoi %}
+    <section class="ftco-section bg-light">
+      <div class="container">
+       <div class="row justify-content-center mb-5 pb-5">
+          <div class="col-md-7 text-center heading-section ftco-animate">
+            <span class="subheading">Erreur 404</span>
+            <h2>Désolé, Aucun résultat ne correspond à votre recherche.</h2>
           </div>
         </div>
       </div>
     </section>
-
+{% endif %}
 <footer class="ftco-bg-dark">
         <p style="color: aliceblue"><b>@MSIDBD</b></p><br>
     </footer>
@@ -320,7 +304,7 @@
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 			</div>
 			<div class="modal-body">
-				 <form action="{% url 'login' %}" method="post" enctype="multipart/form-data">
+				 <form action="{% url 'login'%}" method="post" enctype="multipart/form-data">
                    {% csrf_token%}
 					<div class="form-group">
                       <input type="text" class="form-control" name="mail" placeholder="Votre Email" required="required">
@@ -340,3 +324,4 @@
 	</div>
 </div>
 </html>
+

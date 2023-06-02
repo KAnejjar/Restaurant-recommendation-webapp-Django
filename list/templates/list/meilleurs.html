@@ -1,0 +1,38 @@
+{% extends 'list/base.html' %}
+{% load static %}
+{% block title %}
+<title>Meilleurs</title>
+{% endblock%}
+{% block content %}
+
+  <section class="ftco-section bg-light">
+      <div class="container">
+        <div class="row">
+            {% for Restau in Restaus %}
+          <div class="col-md-6 col-lg-3 ftco-animate">
+            <div class="blog-entry">
+                {% for img in Restau.get_premiere_image|slice:":1" %}
+              <a href="{% url 'rest_detail2' Restau.pk %}" class="block-20" style="background-image: url({{ MEDIA_URL }}{{ img }});">
+              </a>
+                    {% endfor %}
+
+              <div class="text p-4">
+                <div class="meta">
+                  <div><a href="{% url 'rest_detail2' Restau.pk %}">{{ Restau.Origine_cuisine }}</a></div><br>
+                  <div><a href="{% url 'rest_detail2' Restau.pk %}">{{ Restau.Adresse }}</a></div>
+                </div>
+                <h3 class="heading"><a href="{% url 'rest_detail2' Restau.pk %}">{{ Restau.Nom }}</a></h3>
+                <p class="clearfix">
+                  <a href="{% url 'rest_detail2' Restau.pk %}" class="float-left read">Voir Plus</a>
+                  <a href="{% url 'rest_detail2' Restau.pk %}" class="float-right meta-chat"><span class="icon-star" style="color:#FFC300;"></span> {{ Restau.get_rating_value }}</a>
+                </p>
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+        </div>
+      </div>
+    </section>
+
+{% endblock %}
+
