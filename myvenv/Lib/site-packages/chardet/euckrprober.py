@@ -1,7 +1,13 @@
 ######################## BEGIN LICENSE BLOCK ########################
+# The Original Code is mozilla.org code.
+#
+# The Initial Developer of the Original Code is
+# Netscape Communications Corporation.
+# Portions created by the Initial Developer are Copyright (C) 1998
+# the Initial Developer. All Rights Reserved.
+#
 # Contributor(s):
-#   Dan Blanchard
-#   Ian Cordasco
+#   Mark Pilgrim - port to Python
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -19,16 +25,23 @@
 # 02110-1301  USA
 ######################### END LICENSE BLOCK #########################
 
-import sys
+from .mbcharsetprober import MultiByteCharSetProber
+from .codingstatemachine import CodingStateMachine
+from .chardistribution import EUCKRDistributionAnalysis
+from .mbcssm import EUCKR_SM_MODEL
 
 
-if sys.version_info < (3, 0):
-    PY2 = True
-    PY3 = False
-    base_str = (str, unicode)
-    text_type = unicode
-else:
-    PY2 = False
-    PY3 = True
-    base_str = (bytes, str)
-    text_type = str
+class EUCKRProber(MultiByteCharSetProber):
+    def __init__(self):
+        super(EUCKRProber, self).__init__()
+        self.coding_sm = CodingStateMachine(EUCKR_SM_MODEL)
+        self.distribution_analyzer = EUCKRDistributionAnalysis()
+        self.reset()
+
+    @property
+    def charset_name(self):
+        return "EUC-KR"
+
+    @property
+    def language(self):
+        return "Korean"

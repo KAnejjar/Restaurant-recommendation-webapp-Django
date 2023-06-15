@@ -1,7 +1,13 @@
 ######################## BEGIN LICENSE BLOCK ########################
+# The Original Code is mozilla.org code.
+#
+# The Initial Developer of the Original Code is
+# Netscape Communications Corporation.
+# Portions created by the Initial Developer are Copyright (C) 1998
+# the Initial Developer. All Rights Reserved.
+#
 # Contributor(s):
-#   Dan Blanchard
-#   Ian Cordasco
+#   Mark Pilgrim - port to Python
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -19,16 +25,22 @@
 # 02110-1301  USA
 ######################### END LICENSE BLOCK #########################
 
-import sys
+from .mbcharsetprober import MultiByteCharSetProber
+from .codingstatemachine import CodingStateMachine
+from .chardistribution import EUCTWDistributionAnalysis
+from .mbcssm import EUCTW_SM_MODEL
 
+class EUCTWProber(MultiByteCharSetProber):
+    def __init__(self):
+        super(EUCTWProber, self).__init__()
+        self.coding_sm = CodingStateMachine(EUCTW_SM_MODEL)
+        self.distribution_analyzer = EUCTWDistributionAnalysis()
+        self.reset()
 
-if sys.version_info < (3, 0):
-    PY2 = True
-    PY3 = False
-    base_str = (str, unicode)
-    text_type = unicode
-else:
-    PY2 = False
-    PY3 = True
-    base_str = (bytes, str)
-    text_type = str
+    @property
+    def charset_name(self):
+        return "EUC-TW"
+
+    @property
+    def language(self):
+        return "Taiwan"
