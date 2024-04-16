@@ -1,3 +1,5 @@
+**Restaurant Recommendation WebAPP**
+
 This is a web application developed using Django, a Python-based web framework, that provides restaurant recommendations based on user preferences and reviews. It utilizes a database of restaurants, allowing users to search for restaurants based on location, cuisine, price range, and other filters.
 
 Key Features:
@@ -18,3 +20,11 @@ Installation and Usage:
 3. Set up the PostgreSQL database and configure the database settings in the Django project.
 4. Run the Django development server: `python manage.py runserver`
 5. Access the web app in your browser at `http://localhost:8000`
+
+**A video demonstrating a portion of the web application and its usage (explained in French)**
+
+
+
+
+
+
